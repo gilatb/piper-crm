@@ -48,7 +48,7 @@ The solution is based on the following technologies:
 - Run `docker-compose up --build`
 - Open http://localhost:8000/docs to see the API documentation and run the endpoint using the Swagger UI
   - Click on [Try it out] 
-  - Then [Execute] to run the endpoint with some data if needed.
+  - Then [Execute] to run some endpoints with some data if needed.
 
 
 # Summary
