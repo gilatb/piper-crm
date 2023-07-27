@@ -1,5 +1,6 @@
 # Piper AI CRM - Simple CRUD Service
-A service that supports simple CRUD operations for an in-house CRM system.
+A service that supports simple CRUD operations for an in-house CRM system, maintaining data about existing customers and 
+sales opportunities (leads).
 
 
 ## Assumptions
@@ -21,7 +22,8 @@ having direct relationship with the lead.
 database toolkit for Python.
 
 ### API
-The service exposes a REST API that allows the user to create/read/update/delete new customers or sales leads, by calling the appropriate endpoints.
+The service exposes a REST API that allows the user to create/read/update/delete new customers or sales leads, 
+by calling the appropriate endpoints.
 The API is documented using Swagger UI, which is a tool that visually presents the API documentation.
 You can access the Swagger UI by opening http://localhost:8000/docs in your browser after running the server.
 
@@ -50,6 +52,10 @@ The solution is based on the following technologies:
   - Click on [Try it out] 
   - Then [Execute] to run some endpoints with some data if needed.
 
+### Testing & Static Code Analysis
+- `cd` into the project directory
+- Run `make check` to run the tests and static code analysis 
+[The current test coverage is 95%]
 
 # Summary
 This isn't a complete solution. If I had more time, I would have done the following:

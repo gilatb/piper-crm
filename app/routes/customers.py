@@ -10,6 +10,11 @@ from app.models.customers import Customer, CustomerCreate
 router = APIRouter()
 
 
+@router.post("/customers/", response_model=Customer)
+def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)):
+	return crud.create_customer(db=db, customer=customer)
+
+
 @router.get("/customers/{customer_id}", response_model=Customer)
 def read_customer(customer_id: int, db: Session = Depends(get_db)):
 	db_customer = crud.get_customer(db, customer_id=customer_id)
@@ -22,11 +27,6 @@ def read_customer(customer_id: int, db: Session = Depends(get_db)):
 def read_customers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 	customers = crud.get_all_customers(db, skip=skip, limit=limit)
 	return customers
-
-
-@router.post("/customers/", response_model=Customer)
-def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)):
-	return crud.create_customer(db=db, customer=customer)
 
 
 @router.put("/customers/{customer_id}", response_model=Customer)

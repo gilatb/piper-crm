@@ -17,8 +17,8 @@ app = FastAPI(
 )
 
 
-app.include_router(customers.router)
 app.include_router(leads.router)
+app.include_router(customers.router)
 
 
 @app.middleware("http")

@@ -10,6 +10,11 @@ from app.models.leads import Lead, LeadCreate, LeadStatus
 router = APIRouter()
 
 
+@router.post("/leads/", response_model=Lead)
+def create_lead(lead: LeadCreate, db: Session = Depends(get_db)):
+	return crud.create_lead(db=db, lead=lead)
+
+
 @router.get("/leads/{lead_id}", response_model=Lead)
 def read_lead(lead_id: int, db: Session = Depends(get_db)):
 	db_lead = crud.get_lead(db, lead_id=lead_id)
@@ -22,11 +27,6 @@ def read_lead(lead_id: int, db: Session = Depends(get_db)):
 def read_leads(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 	leads = crud.get_all_leads(db, skip=skip, limit=limit)
 	return leads
-
-
-@router.post("/leads/", response_model=Lead)
-def create_lead(lead: LeadCreate, db: Session = Depends(get_db)):
-	return crud.create_lead(db=db, lead=lead)
 
 
 @router.put("/leads/{lead_id}", response_model=Lead)
