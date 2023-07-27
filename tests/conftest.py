@@ -17,7 +17,7 @@ from app.models.customers import CustomerCreate
 from app.models.leads import LeadCreate, LeadStatus
 from app.routes import customers, leads
 from config import settings
-from tests.constants import TEST_DATABASE_URL, TODAY
+from tests.constants import EXPECTED_REVENUE, TEST_DATABASE_URL, TODAY
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -81,7 +81,7 @@ def db_lead(db_session: Session) -> Lead:
         name="Test Lead",
         contact_email="test@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         assigned_to=1,
     )
     return create_lead(db_session, lead_data)

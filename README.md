@@ -63,6 +63,7 @@ with a verification that the employee exists in the database before assigning it
 - [ ] Add more tests to full coverage. Currently, 95% is covered.
 - [ ] Deploy the service to a cloud provider
 - [ ] Add more logging
+- [ ] Add CI/CD
 - [ ] Add more error handling
 - [ ] Add more documentation
 

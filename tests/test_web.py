@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.db.models import Lead
 from app.models.customers import CustomerCreate
 from app.models.leads import LeadCreate, LeadStatus
+from tests.constants import EXPECTED_REVENUE
 
 
 @pytest.fixture
@@ -16,7 +17,7 @@ def created_lead(client: TestClient):
         name="Test Lead",
         contact_email="test@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         source="Google",
         assigned_to=1,
     ).model_dump()
@@ -30,7 +31,7 @@ def test_create_lead(client: TestClient):
         name="Test Lead",
         contact_email="test@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         source="Google",
         assigned_to=1,
     ).model_dump()

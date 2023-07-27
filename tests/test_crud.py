@@ -9,7 +9,7 @@ from app.db.crud import (create_customer, create_lead, delete_customer,
 from app.db.models import Customer, Lead
 from app.models.customers import CustomerCreate
 from app.models.leads import LeadCreate, LeadStatus
-from tests.constants import TODAY
+from tests.constants import EXPECTED_REVENUE, TODAY
 
 
 def test_get_all_leads(db_session: Session):
@@ -17,14 +17,14 @@ def test_get_all_leads(db_session: Session):
         name="Test Lead 1",
         contact_email="test1@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         assigned_to=1,
     )
     lead_data2 = LeadCreate(
         name="Test Lead 2",
         contact_email="test2@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         assigned_to=1,
     )
     create_lead(db_session, lead_data1)
@@ -41,7 +41,7 @@ def test_create_lead(db_session: Session):
         name="Test Lead",
         contact_email="test@test.com",
         status=LeadStatus.New,
-        expected_revenue=5000,
+        expected_revenue=EXPECTED_REVENUE,
         assigned_to=1,
     )
     db_lead = create_lead(db_session, lead_data)
