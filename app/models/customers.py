@@ -2,10 +2,12 @@ import datetime
 
 from pydantic import BaseModel, Field
 
+from app.types import EmailAddress
+
 
 class CustomerBase(BaseModel):
 	name: str = Field(description="Name of the customer")
-	contact_email: str = Field(description="Email address for the primary contact")
+	contact_email: EmailAddress = Field(description="Email address for the primary contact")
 	phone_number: str | None = Field(description="Format: 123-456-789", default=None)
 	address: str | None = Field(
 		description="Street address, city, state, zip code",

@@ -17,10 +17,10 @@ class Customer(Base):
 	address = Column(String)
 	signed_date = Column(DateTime)
 	account_manager_id = Column(Integer)  # assuming we store the employee id elsewhere
-	lead_id = Column(Integer, ForeignKey("leads.id"))
+	lead_id = Column(Integer, ForeignKey("leads.id"), unique=True)
 
 	# Relationships
-	lead = relationship("Lead", back_populates="customer")
+	lead = relationship("Lead", back_populates="customer", uselist=False)
 
 
 class Lead(Base):
@@ -36,4 +36,4 @@ class Lead(Base):
 	assigned_to = Column(Integer, nullable=True)
 
 	# Relationships
-	customer = relationship("Customer", back_populates="lead")
+	customer = relationship("Customer", back_populates="lead", uselist=False)

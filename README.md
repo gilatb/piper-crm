@@ -55,6 +55,9 @@ The solution is based on the following technologies:
 This isn't a complete solution. If I had more time, I would have done the following:
 ### TODO:
 - [ ] Store Employees data in a new database table and add a relationship between the leads/customers and the employees
+with a verification that the employee exists in the database before assigning it to a lead/customer
+- [ ] Add more tests
+- [ ] Add verification of duplicated entries in the database using a set of unique fields that could identify a lead/customer
 - [ ] Add more user-input-validations. For example, the email field is verified but some other fields are not.
 - [ ] Add authentication and authorization
 - [ ] Add more tests to full coverage. Currently, 95% is covered.

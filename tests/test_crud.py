@@ -1,6 +1,6 @@
-import datetime
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db.crud import (create_customer, create_lead, delete_customer,
@@ -10,32 +10,6 @@ from app.db.models import Customer, Lead
 from app.models.customers import CustomerCreate
 from app.models.leads import LeadCreate, LeadStatus
 from tests.constants import TODAY
-
-
-@pytest.fixture
-def db_lead(db_session: Session) -> Lead:
-    lead_data = LeadCreate(
-        name="Test Lead",
-        contact_email="test@test.com",
-        status=LeadStatus.New,
-        expected_revenue=5000,
-        assigned_to=1,
-    )
-    return create_lead(db_session, lead_data)
-
-
-@pytest.fixture
-def db_customer(db_session: Session, db_lead: Lead) -> Customer:
-    customer_data = CustomerCreate(
-        name="Test Customer",
-        contact_email="customer@test.com",
-        phone_number="1234567890",
-        address="123 Main St",
-        signed_date=TODAY,
-        account_manager_id=1,
-        lead_id=int(db_lead.id),
-    )
-    return create_customer(db_session, customer_data)
 
 
 def test_get_all_leads(db_session: Session):
@@ -103,7 +77,7 @@ def test_create_customer(db_session: Session, db_lead: Lead):
         contact_email="customer@test.com",
         phone_number="1234567890",
         address="123 Main St",
-        signed_date=datetime.date(2022, 1, 1),
+        signed_date=TODAY,
         account_manager_id=1,
         lead_id=int(db_lead.id),
     )
@@ -132,3 +106,18 @@ def test_update_customer(db_session: Session, db_customer: Customer):
 def test_delete_customer(db_session: Session, db_customer: Customer):
     delete_customer(db_session, int(db_customer.id))
     assert get_customer(db_session, int(db_customer.id)) is None
+
+
+def test_one_to_one_relationship(db_session: Session, db_lead: Lead, db_customer: Customer):
+    assert db_lead.id == db_customer.lead_id
+    customer_data2 = CustomerCreate(
+        name="Test Customer 2",
+        contact_email="customer2@test.com",
+        phone_number="1234567890",
+        address="123 Main St",
+        signed_date=TODAY,
+        account_manager_id=1,
+        lead_id=int(db_customer.lead_id),
+    )
+    with pytest.raises(IntegrityError):
+        create_customer(db_session, customer_data2)

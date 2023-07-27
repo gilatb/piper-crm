@@ -8,11 +8,16 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy_utils import (create_database, database_exists,  # type: ignore
                               drop_database)
+from starlette.testclient import TestClient
 
+from app.db.crud import create_customer, create_lead
 from app.db.database import Base
+from app.db.models import Customer, Lead
+from app.models.customers import CustomerCreate
+from app.models.leads import LeadCreate, LeadStatus
 from app.routes import customers, leads
 from config import settings
-from tests.constants import TEST_DATABASE_URL
+from tests.constants import TEST_DATABASE_URL, TODAY
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -62,3 +67,35 @@ def app(_patch_settings) -> FastAPI:
     app.include_router(customers.router)
     app.include_router(leads.router)
     return app
+
+
+@pytest.fixture(scope="function")
+def client(app: FastAPI) -> Generator:
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture(scope="function")
+def db_lead(db_session: Session) -> Lead:
+    lead_data = LeadCreate(
+        name="Test Lead",
+        contact_email="test@test.com",
+        status=LeadStatus.New,
+        expected_revenue=5000,
+        assigned_to=1,
+    )
+    return create_lead(db_session, lead_data)
+
+
+@pytest.fixture(scope="function")
+def db_customer(db_session: Session, db_lead: Lead) -> Customer:
+    customer_data = CustomerCreate(
+        name="Test Customer",
+        contact_email="customer@test.com",
+        phone_number="1234567890",
+        address="123 Main St",
+        signed_date=TODAY,
+        account_manager_id=1,
+        lead_id=int(db_lead.id),
+    )
+    return create_customer(db_session, customer_data)

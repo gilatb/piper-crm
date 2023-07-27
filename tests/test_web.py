@@ -2,17 +2,16 @@ from datetime import date
 from typing import Any
 
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+from app.db.models import Lead
 from app.models.customers import CustomerCreate
 from app.models.leads import LeadCreate, LeadStatus
 
 
 @pytest.fixture
-def created_lead(app: FastAPI):
-    client = TestClient(app)
+def created_lead(client: TestClient):
     lead_data = LeadCreate(
         name="Test Lead",
         contact_email="test@test.com",
@@ -26,8 +25,7 @@ def created_lead(app: FastAPI):
     return response.json()
 
 
-def test_create_lead(app: FastAPI):
-    client = TestClient(app)
+def test_create_lead(client: TestClient):
     lead_data = LeadCreate(
         name="Test Lead",
         contact_email="test@test.com",
@@ -46,8 +44,7 @@ def test_create_lead(app: FastAPI):
     assert response.json()["expected_revenue"] == int(lead_data["expected_revenue"] * 100)
 
 
-def test_create_customer(app: FastAPI):
-    client = TestClient(app)
+def test_create_customer(client: TestClient, db_lead: Lead):
     customer_data = CustomerCreate(
         name="Test Customer",
         contact_email="some@email.com",
@@ -55,7 +52,7 @@ def test_create_customer(app: FastAPI):
         address="123 Main St",
         signed_date=date(2021, 1, 1),
         account_manager_id=1,
-        lead_id=1,
+        lead_id=int(db_lead.id),
     ).model_dump()
     customer_data["signed_date"] = customer_data["signed_date"].isoformat()
     response = client.post("/customers/", json=customer_data)
@@ -66,12 +63,10 @@ def test_create_customer(app: FastAPI):
 
 
 def test_convert_lead_to_customer(
-    app: FastAPI,
+    client: TestClient,
     db_session: Session,
     created_lead: dict[str, Any],
 ):
-    client = TestClient(app)
-
     values = {'status': LeadStatus.Won}
     updated_lead_response = client.put(f"/leads/{created_lead['id']}", json=values).json()
 
