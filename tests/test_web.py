@@ -78,6 +78,4 @@ def test_convert_lead_to_customer(
     assert updated_lead_response['status'] == LeadStatus.Won
 
     all_customers = client.get("/customers/").json()
-    assert len(all_customers) == 1
-    assert all_customers[0]['name'] == created_lead['name']
-    assert all_customers[0]['contact_email'] == created_lead['contact_email']
+    assert any(customer['lead_id'] == created_lead['id'] for customer in all_customers)

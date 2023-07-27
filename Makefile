@@ -42,4 +42,4 @@ isort:
 bandit:
 	bandit -q -r -x /venv,/tests .
 
-check: pycln isort flake8 mypy bandit test coverage
+check: pycln isort flake8 mypy test coverage bandit

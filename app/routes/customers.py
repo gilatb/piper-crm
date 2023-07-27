@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -28,8 +30,8 @@ def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/customers/{customer_id}", response_model=Customer)
-def update_customer(customer_id: int, customer: CustomerCreate, db: Session = Depends(get_db)):
-	return crud.update_customer(db=db, customer_id=customer_id, customer=customer)
+def update_customer(customer_id: int, values: dict[str, Any], db: Session = Depends(get_db)):
+	return crud.update_customer(db=db, customer_id=customer_id, values=values)
 
 
 @router.delete("/customers/{customer_id}")

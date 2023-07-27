@@ -36,7 +36,7 @@ def update_lead(lead_id: int, values: dict[str, Any], db: Session = Depends(get_
 	if not (status := values.get('status')):
 		return updated_lead
 
-	if status == LeadStatus.Won:
+	if updated_lead and status == LeadStatus.Won:
 		crud.create_customer_from_lead(db=db, lead_id=lead_id, lead=updated_lead)
 	return updated_lead
 
