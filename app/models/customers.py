@@ -9,7 +9,8 @@ class CustomerBase(BaseModel):
 	phone_number: str | None = Field(description="Format: 123-456-789", default=None)
 	address: str | None = Field(
 		description="Street address, city, state, zip code",
-		example="123 Main St, Anytown, USA 12345", default=None,
+		example="123 Main St, Anytown, USA 12345",
+		default=None,
 	)
 	signed_date: datetime.date = Field(
 		description="Format: YYYY-MM-DD",
