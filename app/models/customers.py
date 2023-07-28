@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.types import EmailAddress
 
@@ -10,6 +10,11 @@ class CustomerBase(BaseModel):
 	contact_email: EmailAddress = Field(
 		json_schema_extra={"description": "Email address for the primary contact"},
 	)
+	account_manager_id: int = Field(
+		json_schema_extra={
+			"description": "ID of the account manager assigned to this customer",
+		},
+	)
 	phone_number: str | None = Field(
 		None,
 		json_schema_extra={"description": "Format: 123-456-789"},
@@ -17,25 +22,16 @@ class CustomerBase(BaseModel):
 	address: str | None = Field(
 		None,
 		json_schema_extra={"description": "Street address, city, state, zip code"},
-		example="123 Main St, Anytown, USA 12345",
 	)
 	signed_date: datetime.date = Field(
 		datetime.date.today().isoformat(),
 		json_schema_extra={"description": "Format: YYYY-MM-DD"},
-		example="2021-01-01",
-	)
-	account_manager_id: int = Field(
-		json_schema_extra={
-			"description": "ID of the account manager assigned to this customer",
-		},
-		example=1,
 	)
 	lead_id: int | None = Field(
 		None,
 		json_schema_extra={
 			"description": "ID of the lead that converted to this customer",
 		},
-		example=1,
 	)
 
 
@@ -46,5 +42,16 @@ class CustomerCreate(CustomerBase):
 class Customer(CustomerBase):
 	id: int
 
-	class Config:
-		from_attributes = True
+	model_config = ConfigDict(
+		from_attributes=True,
+		json_schema_extra={
+			"example": {
+				"name": "Some Corp",
+				"contact_email": "email.somecorp.com",
+				"address": "123 Main St, Anytown, USA 12345",
+				"account_manager_id": 1,
+				"lead_id": 1,
+				"singed_date": "2021-01-01",
+			},
+		},
+	)

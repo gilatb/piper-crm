@@ -1,3 +1,4 @@
+import json
 from datetime import date
 from typing import Any
 
@@ -20,9 +21,9 @@ def created_lead(client: TestClient):
         expected_revenue=EXPECTED_REVENUE,
         source="Google",
         assigned_to=1,
-    ).model_dump()
-
-    response = client.post("/leads/", json=lead_data)
+    )
+    data = json.loads(lead_data.model_dump_json())
+    response = client.post("/leads/", json=data)
     return response.json()
 
 
@@ -34,15 +35,17 @@ def test_create_lead(client: TestClient):
         expected_revenue=EXPECTED_REVENUE,
         source="Google",
         assigned_to=1,
-    ).model_dump()
-    lead_data["expected_revenue"] = lead_data["expected_revenue"] // 100  # converted to cents
-    response = client.post("/leads/", json=lead_data)
+    )
+    data = json.loads(lead_data.model_dump_json())
+
+    data["expected_revenue"] = data["expected_revenue"] // 100  # converted to cents
+    response = client.post("/leads/", json=data)
 
     assert response.status_code == 200
     created_lead = response.json()
-    assert created_lead["name"] == lead_data["name"]
-    assert created_lead["contact_email"] == lead_data["contact_email"]
-    assert created_lead["status"] == lead_data["status"]
+    assert created_lead["name"] == data["name"]
+    assert created_lead["contact_email"] == data["contact_email"]
+    assert created_lead["status"] == data["status"]
     assert created_lead["expected_revenue"] == EXPECTED_REVENUE * 100
 
 
@@ -55,13 +58,14 @@ def test_create_customer(client: TestClient, db_lead: Lead):
         signed_date=date(2021, 1, 1),
         account_manager_id=1,
         lead_id=int(db_lead.id),
-    ).model_dump()
-    customer_data["signed_date"] = customer_data["signed_date"].isoformat()
-    response = client.post("/customers/", json=customer_data)
+    )
+    data = json.loads(customer_data.model_dump_json())
+
+    response = client.post("/customers/", json=data)
 
     assert response.status_code == 200
-    assert response.json()["name"] == customer_data["name"]
-    assert response.json()["contact_email"] == customer_data["contact_email"]
+    assert response.json()["name"] == data["name"]
+    assert response.json()["contact_email"] == data["contact_email"]
 
 
 def test_convert_lead_to_customer(
