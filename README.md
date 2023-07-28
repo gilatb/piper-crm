@@ -57,6 +57,8 @@ The solution is based on the following technologies:
 - Run `make check` to run the tests and static code analysis 
 [The current test coverage is 95%]
 
+![Test Coverage](app/assets/test_coverage.png)
+
 # Summary
 This isn't a complete solution. If I had more time, I would have done the following:
 ### TODO:
