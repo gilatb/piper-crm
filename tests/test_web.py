@@ -35,14 +35,15 @@ def test_create_lead(client: TestClient):
         source="Google",
         assigned_to=1,
     ).model_dump()
-
+    lead_data["expected_revenue"] = lead_data["expected_revenue"] // 100  # converted to cents
     response = client.post("/leads/", json=lead_data)
 
     assert response.status_code == 200
-    assert response.json()["name"] == lead_data["name"]
-    assert response.json()["contact_email"] == lead_data["contact_email"]
-    assert response.json()["status"] == lead_data["status"]
-    assert response.json()["expected_revenue"] == int(lead_data["expected_revenue"] * 100)
+    created_lead = response.json()
+    assert created_lead["name"] == lead_data["name"]
+    assert created_lead["contact_email"] == lead_data["contact_email"]
+    assert created_lead["status"] == lead_data["status"]
+    assert created_lead["expected_revenue"] == EXPECTED_REVENUE * 100
 
 
 def test_create_customer(client: TestClient, db_lead: Lead):

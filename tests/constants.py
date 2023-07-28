@@ -4,4 +4,4 @@ from config import settings
 
 TEST_DATABASE_URL = settings.database_url + "_test"
 TODAY = date.today()
-EXPECTED_REVENUE = float(5000)
+EXPECTED_REVENUE = 5000

@@ -1,4 +1,3 @@
-from copy import deepcopy
 from datetime import date
 from typing import Any
 
@@ -65,10 +64,7 @@ def get_all_leads(db: Session, skip: int = 0, limit: int = 100) -> list[Lead]:
 
 
 def create_lead(db: Session, lead: LeadCreate) -> Lead:
-	lead_in_cents = deepcopy(lead)
-	lead_in_cents.expected_revenue = int(lead.expected_revenue * 100)
-
-	db_lead = Lead(**lead_in_cents.model_dump())
+	db_lead = Lead(**lead.model_dump())
 	db.add(db_lead)
 	db.commit()
 	db.refresh(db_lead)

@@ -15,4 +15,5 @@ def test_customer_create_w_invalid_email(client: TestClient, db_lead: Lead):
             address="123 Main St",
             signed_date=TODAY,
             account_manager_id=1,
+            lead_id=int(db_lead.id),
         )
